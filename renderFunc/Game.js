@@ -10,7 +10,7 @@ export function Game() {
     selectContainer.append(renderSettings())
 
     if (gameData.gameStatus === GAME_STATUSES.before) {
-        const startGameBtn = renderButton('startGame', startGame)
+        const startGameBtn = renderButton('START GAME', startGame, 'startBtn')
         gameContainer.append(selectContainer, startGameBtn)
     } else if (gameData.gameStatus === GAME_STATUSES.inProcess) {
         const playField = document.createElement('div')
