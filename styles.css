@@ -14,6 +14,17 @@ body {
   background: linear-gradient(to bottom right, rgba(40, 91, 174, 1), rgba(76, 161, 210, 1)) no-repeat;
 }
 
+.game_container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 
 span {
   display: block;
@@ -66,7 +77,9 @@ select {
 }
 
 option {
-  background-color: transparent;
+  background: rgba(40, 91, 174, 1);
+  border-radius: 30px;
+
 }
 
 .points {

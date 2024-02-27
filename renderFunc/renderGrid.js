@@ -1,8 +1,9 @@
-import {gameData} from "../data/game.data.js";
-import {renderOffer} from "../components/offer/renderOffer.js";
+import {gameData, OFFER_STATUSES} from "../data/game.data.js";
+import {renderCatchOffer, renderMissOffer, renderOffer} from "../components/offer/renderOffer.js";
 
 export function renderGrid() {
     const container = document.createElement('div')
+    container.className = 'container'
 
     const pointsContainer = document.createElement('div')
     pointsContainer.className = 'points'
@@ -24,6 +25,17 @@ export function renderGrid() {
                 const offer = renderOffer()
                 column.append(offer)
             }
+
+            if (i === gameData.offerMissCoordinates.y && j === gameData.offerMissCoordinates.x) {
+                const missOffer = renderMissOffer()
+                column.append(missOffer)
+            }
+
+            if (i === gameData.offerCatchCoordinates.y && j === gameData.offerCatchCoordinates.x) {
+                const missOffer = renderCatchOffer()
+                column.append(missOffer)
+            }
+
             row.append(column)
         }
         fieldContainer.append(row)

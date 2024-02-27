@@ -5,6 +5,7 @@ import {renderButton} from "../components/button/renderButton.js";
 
 export function Game() {
     const gameContainer = document.createElement('div')
+    gameContainer.className = 'game_container'
 
     const selectContainer = document.createElement('div')
     selectContainer.append(renderSettings())

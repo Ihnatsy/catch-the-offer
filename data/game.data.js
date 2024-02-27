@@ -41,6 +41,14 @@ export const gameData = {
         x: Math.floor(Math.random() * settingsData.Grid.inputValue.selected),
         y: Math.floor(Math.random() * settingsData.Grid.inputValue.selected)
     },
+    offerCatchCoordinates: {
+        x: null,
+        y: null
+    },
+    offerMissCoordinates: {
+        x: null,
+        y: null
+    },
 
     time: {
         ['elapsed time']: ''
@@ -68,7 +76,6 @@ function changeOfferCoordinates() {
     }
     gameData.offerCoordinates.x = NewX
     gameData.offerCoordinates.y = NewY
-    gameData.offerStatus = OFFER_STATUSES.default
 }
 
 export function startGame() {
@@ -76,38 +83,45 @@ export function startGame() {
     start = new Date()
     changeOfferCoordinates()
     notifySubscriber()
-    missId = setInterval(missOffer, 1000)
+    missId = setInterval(missOffer, 2000)
 }
 
 export function catchOffer() {
-    if (gameData.offerStatus === OFFER_STATUSES.default) {
-        clearInterval(missId)
-        gameData.offerStatus = OFFER_STATUSES.catch
-        ++gameData.points.catchPoints
-        if (Number(gameData.pointToWin) === Number(gameData.points.catchPoints)) {
-            gameData.winStatus = true
-            end = new Date()
-            elapsed = end.getTime() - start.getTime()
-            gameData.time['elapsed time'] = millisToMinutesAndSeconds(elapsed)
-        } else {
-            setTimeout(continueFunc, 500)
-        }
-        notifySubscriber()
-    }
-}
-
-export function missOffer() {
     clearInterval(missId)
-    gameData.offerStatus = OFFER_STATUSES.miss
-    ++gameData.points.missPoints
-    if (Number(gameData.points.missPoints) === Number(gameData['misses to loose'])) {
-        gameData.looseStatus = true
+    ++gameData.points.catchPoints
+
+    gameData.offerCatchCoordinates.x = gameData.offerCoordinates.x
+    gameData.offerCatchCoordinates.y = gameData.offerCoordinates.y
+
+    if (Number(gameData.pointToWin) === Number(gameData.points.catchPoints)) {
+        gameData.winStatus = true
         end = new Date()
         elapsed = end.getTime() - start.getTime()
         gameData.time['elapsed time'] = millisToMinutesAndSeconds(elapsed)
     } else {
         setTimeout(continueFunc, 500)
     }
+    changeOfferCoordinates()
+    notifySubscriber()
+    missId = setInterval(missOffer, 2000)
+}
+
+export function missOffer() {
+    ++gameData.points.missPoints
+
+    gameData.offerMissCoordinates.x = gameData.offerCoordinates.x
+    gameData.offerMissCoordinates.y = gameData.offerCoordinates.y
+
+    if (Number(gameData.points.missPoints) === Number(gameData['misses to loose'])) {
+        gameData.looseStatus = true
+        clearInterval(missId)
+        end = new Date()
+        elapsed = end.getTime() - start.getTime()
+        gameData.time['elapsed time'] = millisToMinutesAndSeconds(elapsed)
+    } else {
+        setTimeout(continueFunc, 500)
+    }
+    changeOfferCoordinates()
     notifySubscriber()
 }
 
@@ -118,9 +132,11 @@ function millisToMinutesAndSeconds(millis) {
 }
 
 function continueFunc() {
-    changeOfferCoordinates()
+    gameData.offerMissCoordinates.x = null
+    gameData.offerMissCoordinates.y = null
+    gameData.offerCatchCoordinates.x = null
+    gameData.offerCatchCoordinates.y = null
     notifySubscriber()
-    missId = setInterval(missOffer, 1000)
 }
 
 export function makeDefaultSettings() {
@@ -134,6 +150,8 @@ export function makeDefaultSettings() {
     gameData.offerStatus = OFFER_STATUSES.default
     gameData.winStatus = false
     gameData.looseStatus = false
+    gameData.offerMissCoordinates.x = null
+    gameData.offerMissCoordinates.y = null
     notifySubscriber()
 }
 
