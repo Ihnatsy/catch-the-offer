@@ -95,15 +95,16 @@ export function catchOffer() {
 
     if (Number(gameData.pointToWin) === Number(gameData.points.catchPoints)) {
         gameData.winStatus = true
+        clearInterval(missId)
         end = new Date()
         elapsed = end.getTime() - start.getTime()
         gameData.time['elapsed time'] = millisToMinutesAndSeconds(elapsed)
     } else {
         setTimeout(continueFunc, 500)
+        changeOfferCoordinates()
+        missId = setInterval(missOffer, 2000)
     }
-    changeOfferCoordinates()
     notifySubscriber()
-    missId = setInterval(missOffer, 2000)
 }
 
 export function missOffer() {
@@ -120,8 +121,8 @@ export function missOffer() {
         gameData.time['elapsed time'] = millisToMinutesAndSeconds(elapsed)
     } else {
         setTimeout(continueFunc, 500)
+        changeOfferCoordinates()
     }
-    changeOfferCoordinates()
     notifySubscriber()
 }
 
